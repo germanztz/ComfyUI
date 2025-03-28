@@ -57,90 +57,124 @@ def get_images(ws, prompt):
 
 prompt_text = """
 {
-    "3": {
-        "class_type": "KSampler",
-        "inputs": {
-            "cfg": 8,
-            "denoise": 1,
-            "latent_image": [
-                "5",
-                0
-            ],
-            "model": [
-                "4",
-                0
-            ],
-            "negative": [
-                "7",
-                0
-            ],
-            "positive": [
-                "6",
-                0
-            ],
-            "sampler_name": "euler",
-            "scheduler": "normal",
-            "seed": 8566257,
-            "steps": 20
-        }
+  "6": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "30",
+        1
+      ]
     },
-    "4": {
-        "class_type": "CheckpointLoaderSimple",
-        "inputs": {
-            "ckpt_name": "v1-5-pruned-emaonly.safetensors"
-        }
-    },
-    "5": {
-        "class_type": "EmptyLatentImage",
-        "inputs": {
-            "batch_size": 1,
-            "height": 512,
-            "width": 512
-        }
-    },
-    "6": {
-        "class_type": "CLIPTextEncode",
-        "inputs": {
-            "clip": [
-                "4",
-                1
-            ],
-            "text": "masterpiece best quality girl"
-        }
-    },
-    "7": {
-        "class_type": "CLIPTextEncode",
-        "inputs": {
-            "clip": [
-                "4",
-                1
-            ],
-            "text": "bad hands"
-        }
-    },
-    "8": {
-        "class_type": "VAEDecode",
-        "inputs": {
-            "samples": [
-                "3",
-                0
-            ],
-            "vae": [
-                "4",
-                2
-            ]
-        }
-    },
-    "9": {
-        "class_type": "SaveImage",
-        "inputs": {
-            "filename_prefix": "ComfyUI",
-            "images": [
-                "8",
-                0
-            ]
-        }
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
     }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "31",
+        0
+      ],
+      "vae": [
+        "30",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "27": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "EmptySD3LatentImage"
+    }
+  },
+  "30": {
+    "inputs": {
+      "ckpt_name": "flux1-dev-fp8.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "31": {
+    "inputs": {
+      "seed": 805528666240043,
+      "steps": 20,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "30",
+        0
+      ],
+      "positive": [
+        "35",
+        0
+      ],
+      "negative": [
+        "33",
+        0
+      ],
+      "latent_image": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "33": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "30",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "35": {
+    "inputs": {
+      "guidance": 3.5,
+      "conditioning": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "FluxGuidance"
+    }
+  }
 }
 """
 
@@ -149,7 +183,7 @@ prompt = json.loads(prompt_text)
 prompt["6"]["inputs"]["text"] = "masterpiece best quality man"
 
 #set the seed for our KSampler node
-prompt["3"]["inputs"]["seed"] = 5
+prompt["31"]["inputs"]["seed"] = 6
 
 ws = websocket.WebSocket()
 ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
